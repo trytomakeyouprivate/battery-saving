@@ -6,6 +6,9 @@ CPU_CORES=""
 # How many cores do you want to keep running? (start with 0)
 KEEPCORES=3
 
+# Set the bin BIN_DIR
+BIN_DIR=~/.bin
+
 # Loop through each CPU core and disable it, except for CPU0-CPU3
 for ((CORE=$KEEPCORES; CORE<=$(nproc); CORE++))
 do
@@ -25,7 +28,16 @@ do
     CPU_CORES+="cpu$CORE "
     # add to file
     echo "$CMD2" >> "$BIN_DIR/enable-cores"
-done
+done &&\
+chmod +x "$BIN_DIR/disable-cores" &&\
+chmod +x "$BIN_DIR/enable-cores" &&\
+cat <<EOF
 
-chmod +x "$BIN_DIR/disable-cores"
-chmod +x "$BIN_DIR/enable-cores"
+------------------
+
+Disabling CPU cores for battery saving.
+
+The scripts are created successfully. You find them in $BIN_DIR
+
+-------------------
+EOF
