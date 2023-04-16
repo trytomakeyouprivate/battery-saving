@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Create an empty string to store the list of CPU cores
+CPU_CORES=""
+
+# How many cores do you want to keep running? (start with 0)
+KEEPCORES=3
+
+# Loop through each CPU core and disable it, except for CPU0-CPU3
+for ((CORE=$KEEPCORES; CORE<=$(nproc); CORE++))
+do
+    CMD1= "pkexec echo 0 > /sys/devices/system/cpu/cpu$CORE/online"
+    # Append the CPU core name to the list
+    CPU_CORES+="cpu$CORE "
+    # add to file
+    echo "$CMD1" >> "$BIN_DIR/disable-cores"
+done
+
+## Loop through each CPU core and enable it, except for CPU0-CPU3
+
+for ((CORE=$KEEPCORES; CORE<=$(nproc); CORE++))
+do
+    CMD2= "pkexec echo 1 > /sys/devices/system/cpu/cpu$CORE/online"
+    # Append the CPU core name to the list
+    CPU_CORES+="cpu$CORE "
+    # add to file
+    echo "$CMD2" >> "$BIN_DIR/enable-cores"
+done
+
+chmod +x "$BIN_DIR/disable-cores"
+chmod +x "$BIN_DIR/enable-cores"
